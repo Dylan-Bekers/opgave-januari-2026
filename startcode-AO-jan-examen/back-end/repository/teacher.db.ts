@@ -7,7 +7,13 @@ const getAllTeachers = async (): Promise<Teacher[]> => {
         // Modify the prisma schema so that User information from the User model is included when fetching Teacher information.
         // Implement the mapping function in Teacher in order to return a domain object.
         // Run the seed.ts script again to add test data to the database.
-        return [];
+
+        const teachers = await database.teacher.findMany({
+            where: {user : {role: 'teacher'}},
+            include: {user: true},
+            orderBy: {id: 'asc'}
+        });
+        return teachers.map((t) => Teacher.from(t));
     } catch (error) {
         throw new Error('Database error. See server log for details.');
     }
@@ -18,7 +24,12 @@ const updateLearningPath = async (teacherId: number, learningPath: string): Prom
         // Update the learning path of the teacher with the given ID.
         // Return the updated teacher including its user information.
         // Return a domain object.
-        return null;
+        const updated = await database.teacher.update({
+            where: {id: teacherId},
+            data: {learningPath},
+            include: {user: true}
+        });
+        return Teacher.from(updated);
     } catch (error) {
         throw new Error('Database error. See server log for details.');
     }

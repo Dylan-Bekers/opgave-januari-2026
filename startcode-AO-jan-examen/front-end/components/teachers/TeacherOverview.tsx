@@ -8,10 +8,18 @@ type Props = {
 
 const TeacherOverview: React.FC<Props> = ({ teachers }: Props) => {
   const [loggedInUser, setLoggedInUser] = useState<User>(null);
+  const [teacherList, setTeacherList] = useState<Teacher[]>(teachers ?? []);
 
   useEffect(() => {
-    setLoggedInUser(JSON.parse(sessionStorage.getItem('loggedInUser')));
+    setLoggedInUser(JSON.parse(sessionStorage.getItem('loggedInUser') as string));
   }, []);
+
+  useEffect(() => {
+    setTeacherList(teachers ?? []);
+  }, [teachers]);
+
+  const isAdmin = loggedInUser?.role === 'admin';
+
 
   return (
     <>
@@ -26,6 +34,23 @@ const TeacherOverview: React.FC<Props> = ({ teachers }: Props) => {
           <tbody>
             {/* Render a row for each teacher containing name and learning path */}
             {/* For question 1.c, you can use the LearningPath component. */}
+            {teacherList.map((teacher) => (
+              <tr key = {teacher.id}>
+                <td>
+                  {teacher.user?.firstName} {teacher.user?.lastName}
+                </td>
+                <td>
+                  {!isAdmin && <span>{teacher.learningPath}</span>}
+
+                  {isAdmin && (
+                    <LearningPath
+                      teacherId={teacher.id}
+                      learningPath={teacher.learningPath}
+                    />
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
