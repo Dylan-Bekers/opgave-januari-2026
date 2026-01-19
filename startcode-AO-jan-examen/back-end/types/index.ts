@@ -18,6 +18,10 @@ type TeacherInput = {
     phase?: string;
 };
 
+type ClassroomInput = {
+    name: string;
+};
+
 type AuthenticationResponse = {
     token: string;
     username: string;
@@ -25,4 +29,4 @@ type AuthenticationResponse = {
     role: string;
 };
 
-export { Role, TeacherInput, UserInput, AuthenticationResponse };
+export { Role, TeacherInput, UserInput, ClassroomInput, AuthenticationResponse };
